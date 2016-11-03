@@ -46,11 +46,13 @@ class App extends Component {
 
   userEnterdMessage(message) {
     const newId = this.state.messages.length + 1;
-    const newMessage = {id: uuid.v1(), username: "Nic", content: message};
+    const newMessage = {id: uuid.v1(), username: message.user, content: message.message};
     const messages = this.state.messages.concat(newMessage);
     this.socket.send(JSON.stringify(newMessage));
     this.setState({messages: messages});
   }
+
+
 
   //   setTimeout(() => {
   //     console.log("Simulating incoming message");
