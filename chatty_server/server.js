@@ -24,7 +24,8 @@ var usersOnline = 0;
 wss.on('connection', (ws) => {
 
   usersOnline += 1;
-
+  // this function is being redefined every time the user connects.
+  // please move this function outside of the wss.on
   wss.broadcast = function broadcast(data) {
     console.log('broadcast');
     wss.clients.forEach(function each(client) {
