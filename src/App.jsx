@@ -14,9 +14,9 @@ class App extends Component {
 
   componentWillMount() {
       this.setState ({
-      usersOnline: 0,
       currentUser: {name: "Bob"},
-      messages: []
+      messages: [],
+      usersOnline: 0
     });
   }
 
@@ -34,13 +34,11 @@ class App extends Component {
 
           if (data.type === "userCount") {
             this.setState({usersOnline: data.usersOnline})
-            console.log(this.state);
 
           } else {
             data.type = "incomingMessage";
             const messages = this.state.messages.concat(data);
             this.setState({messages: messages});
-            console.log(this.state.messages);
           }
       }
     }
@@ -65,7 +63,7 @@ class App extends Component {
       let changeNameNotification = {
         content: "User changed name from " + this.state.currentUser.name + " to: " + message.user,
         type: "postNotification"
-      }
+    }
       let userMessage = {
         id: uuid.v1(),
         username: message.user,
