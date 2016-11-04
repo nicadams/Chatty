@@ -11,9 +11,9 @@ class ChatBar extends Component {
    handleMessageChange(event) {
     if (event.keyCode === 13) {
         this.props.sendMessage({message: this.state.message, user: this.state.user});
-      } else {
+    } else {
       this.setState({message: event.target.value});
-      }
+    }
   }
 
    handleNameChange(event) {

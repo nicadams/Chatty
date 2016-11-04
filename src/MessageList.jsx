@@ -5,7 +5,6 @@ class MessageList extends Component {
   render() {
       console.log("Rendering <MessageList/>")
 
-      console.log(this.props.messages);
     return (
       <div id="message-list">
       {this.props.messages.map((message) => {
