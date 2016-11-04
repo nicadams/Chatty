@@ -13,7 +13,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-      this.setState ({
+      this.setState ({  // fix indentation
       currentUser: {name: "Bob"},
       messages: [],
       usersOnline: 0
@@ -31,7 +31,9 @@ class App extends Component {
 
       this.socket.onmessage = (messageEvent) => {
         let data = JSON.parse(messageEvent.data);
-
+          // TODO: Please add some code to satisfy the requirement
+          // of displaying "User X changed their name to User Y"
+          // when a user changes their name.
           if (data.type === "userCount") {
             this.setState({usersOnline: data.usersOnline})
 
@@ -46,11 +48,27 @@ class App extends Component {
 
 
   componentWillUnmount() {
-    this.socket.close();
+    this.socket.close(); // nice!
   }
 
   userEnterdMessage(message) {
-    if (message.user === "") {
+    // You are reusing the message object to do two things:
+    //   - post a new message
+    //   - rename the user
+    // In order to distinguish a message that changes a username
+    // from a message that adds a new chat message, you are checking
+    // to see if the message contains a user property.
+    // This might lead to confusion.
+    // Suggestion: add a 'type' property to the message.
+    // Then you can check (if message.type === "changeName"...)
+    // 
+    // Another thing you can do (and this requires more work, but it is
+    // probably a cleaner solution) is to split up this function into
+    // two separate functions:
+    //    - userEnteredMessage
+    //    - userChangedName
+    //
+    if (message.user === "") { // nice check here
       let newMessage = {
         id: uuid.v1(),
         username: this.state.currentUser.name,
@@ -64,12 +82,20 @@ class App extends Component {
         content: "User changed name from " + this.state.currentUser.name + " to: " + message.user,
         type: "postNotification"
     }
-      let userMessage = {
+      let userMessage = {  // fix indentation
         id: uuid.v1(),
         username: message.user,
         content: message.message,
         type: "postMessage"
       };
+
+      // The current implementation requires a user to change their name
+      // in the chat bar and then enter a new message.
+      // This is a little confusing usability-wise.
+
+      // If you feel it is worthwhile for your learning experience,
+      // I suggest changing the code so that a user can change their name
+      // by updating the name in the chat bar and then hitting the ENTER key.
       this.state.currentUser.name = message.user;
       this.socket.send(JSON.stringify(changeNameNotification));
       this.socket.send(JSON.stringify(userMessage));
