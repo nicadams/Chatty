@@ -21,16 +21,15 @@ const wss = new SocketServer({ server });
 
 var usersOnline = 0;
 
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    client.send(JSON.stringify(data));
+  });
+};
+
 wss.on('connection', (ws) => {
 
   usersOnline += 1;
-
-  wss.broadcast = function broadcast(data) {
-    console.log('broadcast');
-    wss.clients.forEach(function each(client) {
-      client.send(JSON.stringify(data));
-    });
-  };
 
   ws.on('message', message => {
     const data = JSON.parse(message);

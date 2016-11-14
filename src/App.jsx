@@ -9,11 +9,11 @@ class App extends Component {
   constructor(props) {
     console.log("App constructor")
     super(props)
-    this.userEnterdMessage = this.userEnterdMessage.bind(this);
+    this.userEnteredMessage = this.userEnteredMessage.bind(this);
   }
 
   componentWillMount() {
-      this.setState ({
+    this.setState ({
       currentUser: {name: "Bob"},
       messages: [],
       usersOnline: 0
@@ -49,21 +49,12 @@ class App extends Component {
     this.socket.close();
   }
 
-  userEnterdMessage(message) {
-    if (message.user === "") {
-      let newMessage = {
-        id: uuid.v1(),
-        username: this.state.currentUser.name,
-        content: message.message,
-        type: "postMessage"
-      };
-      this.socket.send(JSON.stringify(newMessage));
-
-    } else {
+  userEnteredMessage(message) {
+    if (message.type === "changeName") {
       let changeNameNotification = {
-        content: "User changed name from " + this.state.currentUser.name + " to: " + message.user,
+        content: "User changed name from " + this.state.currentUser.name + " to: ",
         type: "postNotification"
-    }
+      }
       let userMessage = {
         id: uuid.v1(),
         username: message.user,
@@ -73,6 +64,15 @@ class App extends Component {
       this.state.currentUser.name = message.user;
       this.socket.send(JSON.stringify(changeNameNotification));
       this.socket.send(JSON.stringify(userMessage));
+
+    } else {
+     let newMessage = {
+        id: uuid.v1(),
+        username: this.state.currentUser.name,
+        content: message.message,
+        type: "postMessage"
+      };
+      this.socket.send(JSON.stringify(newMessage));
     }
   }
 
@@ -88,7 +88,7 @@ class App extends Component {
         <MessageList messages={this.state.messages} />
         <ChatBar
           currentUser={this.state.currentUser}
-          sendMessage={this.userEnterdMessage} />
+          sendMessage={this.userEnteredMessage} />
       </div>
 
     )
