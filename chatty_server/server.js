@@ -29,8 +29,6 @@ wss.broadcast = function broadcast(data) {
 
 wss.on('connection', (ws) => {
 
-  usersOnline += 1;
-
   ws.on('message', message => {
     const data = JSON.parse(message);
     wss.broadcast(data);
@@ -38,14 +36,13 @@ wss.on('connection', (ws) => {
 
   wss.broadcast({
     type: 'userCount',
-    usersOnline: usersOnline
+    usersOnline: wss.clients.length
   });
 
   ws.on('close', function () {
-    usersOnline -= 1;
     wss.broadcast({
       type: 'userCount',
-      usersOnline: usersOnline
+      usersOnline: wss.clients.length
     });
   });
 });

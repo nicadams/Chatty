@@ -36,7 +36,6 @@ class App extends Component {
             this.setState({usersOnline: data.usersOnline})
 
           } else {
-            data.type = "incomingMessage";
             const messages = this.state.messages.concat(data);
             this.setState({messages: messages});
           }
@@ -52,18 +51,11 @@ class App extends Component {
   userEnteredMessage(message) {
     if (message.type === "changeName") {
       let changeNameNotification = {
-        content: "User changed name from " + this.state.currentUser.name + " to: ",
+        content: "User changed name from " + this.state.currentUser.name + " to " + message.user,
         type: "postNotification"
       }
-      let userMessage = {
-        id: uuid.v1(),
-        username: message.user,
-        content: message.message,
-        type: "postMessage"
-      };
-      this.state.currentUser.name = message.user;
+      this.setState({currentUser: {name: message.user}});
       this.socket.send(JSON.stringify(changeNameNotification));
-      this.socket.send(JSON.stringify(userMessage));
 
     } else {
      let newMessage = {

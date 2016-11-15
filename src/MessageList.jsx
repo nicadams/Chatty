@@ -8,10 +8,17 @@ class MessageList extends Component {
     return (
       <div id="message-list">
       {this.props.messages.map((message) => {
-        return <Message
+        console.log(message.type)
+        if (message.type === 'postNotification') {
+          return <div className='message system'>{message.content}</div>
+        } else {
+          return <Message
+
           key={message.id}
           username={message.username}
           content={message.content} />
+        }
+
         })
       }
       </div>
